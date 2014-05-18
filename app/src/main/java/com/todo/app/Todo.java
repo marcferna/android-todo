@@ -15,22 +15,30 @@ import java.util.ArrayList;
 
 public class Todo extends Activity {
 
-  private final static int EDIT_ITEM_REQUEST_CODE = 1;
+  /**
+   * List with all the todo items
+   */
+  private ArrayList<String> items;
 
-  ArrayList<String> items;
-  ArrayAdapter<String> itemsAdapter;
-  ListView lvItems;
+  /**
+   * Adapter for the todo list view
+   */
+  private ArrayAdapter<String> itemsAdapter;
+
+  /**
+   * Request code for the edit item intent
+   */
+  private final int EDIT_ITEM_REQUEST_CODE = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_todo);
-    lvItems = (ListView) findViewById(R.id.lvItems);
+
+    // read the items from the persistent store
     items = PersistentStore.readItems();
-    itemsAdapter = new ArrayAdapter<String>(this,
-      android.R.layout.simple_list_item_1, items);
-    lvItems.setAdapter(itemsAdapter);
-    setupListViewListener();
+
+    setupListView();
   }
 
   public void addTodoItem(View v) {
@@ -42,7 +50,19 @@ public class Todo extends Activity {
     PersistentStore.saveItems(items);
   }
 
-  private void setupListViewListener() {
+  private void setupListView() {
+    ListView lvItems = (ListView) findViewById(R.id.lvItems);
+
+    // setup the items adapter
+    itemsAdapter = new ArrayAdapter<String>(
+      this,
+      android.R.layout.simple_list_item_1,
+      items
+    );
+    lvItems.setAdapter(itemsAdapter);
+
+    // set up list view listeners
+    // remove item on long click
     lvItems.setOnItemLongClickListener(
       new AdapterView.OnItemLongClickListener() {
         @Override
@@ -59,12 +79,22 @@ public class Todo extends Activity {
         }
     });
 
+    // edit item on click
     lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      public void onItemClick(
+        AdapterView<?> parent,
+        View view,
+        int position,
+        long id)
+      {
+        // create a new intent to edit the item
         Intent editItemIntent = new Intent(Todo.this, EditItem.class);
+
+        // add the item's position and description to the intent
         editItemIntent.putExtra("position", position);
-        editItemIntent.putExtra("title", items.get(position));
+        editItemIntent.putExtra("description", items.get(position));
+
         startActivityForResult(editItemIntent, EDIT_ITEM_REQUEST_CODE);
       }
     });
@@ -72,10 +102,14 @@ public class Todo extends Activity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    // edit item activity result
     if (resultCode == RESULT_OK && requestCode == EDIT_ITEM_REQUEST_CODE) {
+      // get the item's position and description from the intent extra data
       int position =  data.getExtras().getInt("position");
-      String newTitle = data.getExtras().getString("title");
-      items.set(position, newTitle);
+      String newDescription = data.getExtras().getString("description");
+
+      // update the item's description
+      items.set(position, newDescription);
       itemsAdapter.notifyDataSetChanged();
       PersistentStore.saveItems(items);
     }

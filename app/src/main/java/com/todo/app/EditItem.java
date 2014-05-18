@@ -9,8 +9,15 @@ import android.widget.EditText;
 
 public class EditItem extends Activity {
 
+  /**
+   * Item's position that will need to be send back to the previous intent
+   * in order to update the correct item
+   */
   private int position;
-  private String title;
+
+  /**
+   * Text field with the item's description
+   */
   private EditText editTextField;
 
   @Override
@@ -18,25 +25,33 @@ public class EditItem extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_edit_item);
 
+    // get the item's position and description from the intent extra data
     position = getIntent().getIntExtra("position", 0);
-    title = getIntent().getStringExtra("title");
+    String description = getIntent().getStringExtra("description");
 
+    // update the edit text field and set focus
     editTextField = (EditText) findViewById(R.id.editItemTextField);
-    editTextField.setText(title);
+    editTextField.setText(description);
     editTextField.requestFocus();
-    editTextField.setSelection(title.length());
+    editTextField.setSelection(description.length());
 
   }
 
-  public void editTodoItem(View v) {
-    editTextField = (EditText) findViewById(R.id.editItemTextField);
-    // check that the new item is not empty
+  public void saveEditTodoItem(View v) {
+    // check that the new item description is not empty
     if (editTextField.getText().toString().length() == 0) return;
 
+    // finish the current intent and add the modified item info as extra data
     Intent data = new Intent();
-    data.putExtra("title", editTextField.getText().toString());
+    data.putExtra("description", editTextField.getText().toString());
     data.putExtra("position", position);
     setResult(RESULT_OK, data);
+    finish();
+  }
+
+  public void cancelEditTodoItem(View v) {
+    // finish the current intent with a cancelled result
+    setResult(RESULT_CANCELED);
     finish();
   }
 }
