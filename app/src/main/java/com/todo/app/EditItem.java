@@ -16,34 +16,42 @@ public class EditItem extends Activity {
   private int position;
 
   /**
+   * Text field with the item's title
+   */
+  private EditText titleEditText;
+  /**
    * Text field with the item's description
    */
-  private EditText editTextField;
+  private EditText descriptionEditText;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_edit_item);
 
-    // get the item's position and description from the intent extra data
+    // get the item's position and info from the intent extra data
     position = getIntent().getIntExtra("position", 0);
+    String title = getIntent().getStringExtra("title");
     String description = getIntent().getStringExtra("description");
 
-    // update the edit text field and set focus
-    editTextField = (EditText) findViewById(R.id.editItemTextField);
-    editTextField.setText(description);
-    editTextField.requestFocus();
-    editTextField.setSelection(description.length());
+    // update the edit text field and set focus on the title
+    titleEditText = (EditText) findViewById(R.id.titleEditText);
+    titleEditText.setText(title);
+    titleEditText.requestFocus();
+    titleEditText.setSelection(title.length());
 
+    descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
+    descriptionEditText.setText(description);
   }
 
   public void saveEditTodoItem(View v) {
-    // check that the new item description is not empty
-    if (editTextField.getText().toString().length() == 0) return;
+    // check that the new item title is not empty
+    if (titleEditText.getText().toString().length() == 0) return;
 
     // finish the current intent and add the modified item info as extra data
     Intent data = new Intent();
-    data.putExtra("description", editTextField.getText().toString());
+    data.putExtra("title", titleEditText.getText().toString());
+    data.putExtra("description", descriptionEditText.getText().toString());
     data.putExtra("position", position);
     setResult(RESULT_OK, data);
     finish();

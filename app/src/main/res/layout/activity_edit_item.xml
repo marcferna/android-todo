@@ -18,18 +18,33 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"/>
 
+
   <EditText
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:inputType="textMultiLine"
+    android:layout_height="wrap_content"
+    android:inputType="text"
     android:ems="10"
-    android:id="@+id/editItemTextField"
+    android:id="@+id/titleEditText"
     android:layout_below="@+id/textView"
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
-    android:layout_above="@+id/saveButton"/>
+    />
+
+  <EditText
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:inputType="textMultiLine"
+    android:ems="10"
+    android:id="@+id/descriptionEditText"
+    android:layout_below="@+id/titleEditText"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_above="@+id/saveButton"
+    android:hint="Description"/>
 
   <Button
     android:layout_width="wrap_content"
@@ -37,7 +52,7 @@
     android:text="Cancel"
     android:id="@+id/cancelButton"
     android:onClick="cancelEditTodoItem"
-    android:layout_below="@+id/editItemTextField"
+    android:layout_below="@+id/descriptionEditText"
     android:layout_toLeftOf="@+id/saveButton"/>
   <Button
     android:layout_width="wrap_content"
