@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.todo.app.PersistentStore.PersistentStore;
+
 import java.util.ArrayList;
 
 public class Todo extends Activity {
@@ -23,14 +25,11 @@ public class Todo extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_todo);
-
     lvItems = (ListView) findViewById(R.id.lvItems);
-    items = new ArrayList<String>();
+    items = PersistentStore.readItems();
     itemsAdapter = new ArrayAdapter<String>(this,
       android.R.layout.simple_list_item_1, items);
     lvItems.setAdapter(itemsAdapter);
-    items.add("First Item");
-    items.add("Second Item");
     setupListViewListener();
   }
 
@@ -40,6 +39,7 @@ public class Todo extends Activity {
     if (etNewItem.getText().toString().length() == 0) return;
     itemsAdapter.add(etNewItem.getText().toString());
     etNewItem.setText("");
+    PersistentStore.saveItems(items);
   }
 
   private void setupListViewListener() {
@@ -54,6 +54,7 @@ public class Todo extends Activity {
         ) {
           items.remove(position);
           itemsAdapter.notifyDataSetChanged();
+          PersistentStore.saveItems(items);
           return true;
         }
     });
@@ -76,6 +77,7 @@ public class Todo extends Activity {
       String newTitle = data.getExtras().getString("title");
       items.set(position, newTitle);
       itemsAdapter.notifyDataSetChanged();
+      PersistentStore.saveItems(items);
     }
   }
 }
