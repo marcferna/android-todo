@@ -1,12 +1,10 @@
 package com.todo.app.TodoItem;
 
-import java.util.Date;
-
 public class TodoItem {
+  public long id;
   public String title;
   public String description;
   public boolean done;
-  public Date doneAt;
 
   public TodoItem() {
     super();

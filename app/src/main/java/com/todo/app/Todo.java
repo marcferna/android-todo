@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.todo.app.PersistentStore.PersistentStore;
+import com.todo.app.PersistentStorage.PersistentStorage;
 import com.todo.app.TodoItem.TodoItem;
 import com.todo.app.TodoItem.TodoItemAdapter;
 
@@ -31,13 +31,16 @@ public class Todo extends Activity {
    */
   private final int EDIT_ITEM_REQUEST_CODE = 1;
 
+  private PersistentStorage persistentStorage;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_todo);
 
+    persistentStorage = new PersistentStorage(Todo.this);
     // read the items from the persistent store
-    //items = PersistentStore.readItems();
+    items = persistentStorage.readItems();
 
     setupListView();
   }
@@ -64,9 +67,12 @@ public class Todo extends Activity {
           int position,
           long id
         ) {
-          items.remove(position);
-          itemsAdapter.notifyDataSetChanged();
-          //PersistentStore.saveItems(items);
+
+          TodoItem item = items.get(position);
+          if (persistentStorage.deleteItem(item)) {
+            items.remove(position);
+            itemsAdapter.notifyDataSetChanged();
+          }
           return true;
         }
     });
@@ -78,8 +84,7 @@ public class Todo extends Activity {
         AdapterView<?> parent,
         View view,
         int position,
-        long id)
-      {
+        long id) {
         // create a new intent to edit the item
         Intent editItemIntent = new Intent(Todo.this, EditItem.class);
 
@@ -101,9 +106,12 @@ public class Todo extends Activity {
     if (etNewItem.getText().toString().length() == 0) return;
 
     TodoItem newItem = new TodoItem(etNewItem.getText().toString());
-    itemsAdapter.add(newItem);
-    etNewItem.setText("");
-    //PersistentStore.saveItems(items);
+    long insertedId = persistentStorage.saveItem(newItem);
+    if (insertedId != -1) {
+      newItem.id = insertedId;
+      itemsAdapter.add(newItem);
+      etNewItem.setText("");
+    }
   }
 
   @Override
@@ -115,12 +123,14 @@ public class Todo extends Activity {
       String newTitle = data.getExtras().getString("title");
       String newDescription = data.getExtras().getString("description");
 
-      TodoItem newItem = new TodoItem(newTitle, newDescription);
+      TodoItem modifiedItem = new TodoItem(newTitle, newDescription);
+      modifiedItem.id = items.get(position).id;
 
-      // update the item's info
-      items.set(position, newItem);
-      itemsAdapter.notifyDataSetChanged();
-      //PersistentStore.saveItems(items);
+      if (persistentStorage.updateItem(modifiedItem)) {
+        // update the item's info
+        items.set(position, modifiedItem);
+        itemsAdapter.notifyDataSetChanged();
+      }
     }
   }
 }
