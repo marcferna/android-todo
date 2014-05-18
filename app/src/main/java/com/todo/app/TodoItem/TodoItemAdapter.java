@@ -33,7 +33,7 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
   @Override
   public View getView(final int position, View convertView, ViewGroup parent) {
     View row = convertView;
-    TodoItemHolder holder;
+    final TodoItemHolder holder;
 
     if (row == null) {
       LayoutInflater inflater = ((Activity)context).getLayoutInflater();
@@ -50,12 +50,14 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
     TodoItem item = data.get(position);
     holder.titleTextView.setText(item.title);
     holder.doneCheckbox.setChecked(item.done);
+    updateView(holder.titleTextView, item.done);
     holder.doneCheckbox.setOnClickListener(new View.OnClickListener() {
 
       @Override
       public void onClick(View v) {
-        ((Todo)context).todoItemChecked(position,
-            ((CompoundButton) v).isChecked());
+        boolean isChecked = ((CompoundButton) v).isChecked();
+        ((Todo)context).todoItemChecked(position, isChecked);
+        updateView(holder.titleTextView, isChecked);
       }
     });
 
@@ -78,6 +80,19 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
   @Override
   public long getItemId(int position) {
     return position;
+  }
+
+  /**
+   * Updates the TextView for the title based on if the item is done or not
+   * @param textView TextView with the TodoItem title
+   * @param isChecked true if the item is done, false otherwise
+   */
+  private void updateView(TextView textView, boolean isChecked) {
+    if (isChecked) {
+      textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+    } else {
+      textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+    }
   }
 
   class TodoItemHolder {
