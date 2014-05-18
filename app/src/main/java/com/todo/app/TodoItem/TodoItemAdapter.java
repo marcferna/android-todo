@@ -2,14 +2,17 @@ package com.todo.app.TodoItem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.todo.app.R;
+import com.todo.app.Todo;
 
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
+  public View getView(final int position, View convertView, ViewGroup parent) {
     View row = convertView;
     TodoItemHolder holder;
 
@@ -47,6 +50,14 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
     TodoItem item = data.get(position);
     holder.titleTextView.setText(item.title);
     holder.doneCheckbox.setChecked(item.done);
+    holder.doneCheckbox.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        ((Todo)context).todoItemChecked(position,
+            ((CompoundButton) v).isChecked());
+      }
+    });
 
     return row;
   }

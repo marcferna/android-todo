@@ -114,6 +114,16 @@ public class Todo extends Activity {
     }
   }
 
+  public void todoItemChecked(int position, boolean checked) {
+    TodoItem item = items.get(position);
+    item.done = checked;
+    if (persistentStorage.updateItem(item)) {
+      // update the item's info
+      items.set(position, item);
+      itemsAdapter.notifyDataSetChanged();
+    }
+  }
+
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     // edit item activity result
@@ -123,8 +133,9 @@ public class Todo extends Activity {
       String newTitle = data.getExtras().getString("title");
       String newDescription = data.getExtras().getString("description");
 
-      TodoItem modifiedItem = new TodoItem(newTitle, newDescription);
-      modifiedItem.id = items.get(position).id;
+      TodoItem modifiedItem = items.get(position);
+      modifiedItem.title = newTitle;
+      modifiedItem.description = newDescription;
 
       if (persistentStorage.updateItem(modifiedItem)) {
         // update the item's info
