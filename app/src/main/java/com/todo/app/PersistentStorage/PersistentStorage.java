@@ -28,6 +28,14 @@ public class PersistentStorage {
   }
 
   /**
+   * Reads a single item specified from its id from the persistent storage
+   * @return a TodoItem with the id specified
+   */
+  public TodoItem getItem(long itemId) {
+    return dataSource.getTodoItem(itemId);
+  }
+
+  /**
    * Saves the new item into the persistent storage
    *
    * @param item TodoItem to be stored

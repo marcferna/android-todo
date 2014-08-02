@@ -7,6 +7,7 @@ public class TodoItem {
   public String title;
   public String description;
   public boolean done = false;
+  public String dueDate;
 
   public TodoItem() {
     super();
@@ -19,5 +20,11 @@ public class TodoItem {
   public TodoItem(String title, String description) {
     this.title = title;
     this.description = description;
+  }
+
+  public TodoItem(String title, String description, String dueDate) {
+    this.title = title;
+    this.description = description;
+    this.dueDate = dueDate;
   }
 }

@@ -92,8 +92,7 @@ public class Todo extends Activity {
         TodoItem selectedItem = items.get(position);
 
         editItemIntent.putExtra("position", position);
-        editItemIntent.putExtra("title", selectedItem.title);
-        editItemIntent.putExtra("description", selectedItem.description);
+        editItemIntent.putExtra("id", selectedItem.id);
 
         startActivityForResult(editItemIntent, EDIT_ITEM_REQUEST_CODE);
       }
@@ -132,10 +131,12 @@ public class Todo extends Activity {
       int position =  data.getExtras().getInt("position");
       String newTitle = data.getExtras().getString("title");
       String newDescription = data.getExtras().getString("description");
+      String newDueDate = data.getExtras().getString("dueDate");
 
       TodoItem modifiedItem = items.get(position);
       modifiedItem.title = newTitle;
       modifiedItem.description = newDescription;
+      modifiedItem.dueDate = newDueDate;
 
       if (persistentStorage.updateItem(modifiedItem)) {
         // update the item's info

@@ -22,7 +22,7 @@ public class TodoItemsDataSource {
    */
   private String[] allColumns = { SqlHelper.COLUMN_ID,
     SqlHelper.COLUMN_TITLE, SqlHelper.COLUMN_DESCRIPTION,
-    SqlHelper.COLUMN_DONE};
+    SqlHelper.COLUMN_DONE, SqlHelper.COLUMN_DUEDATE};
 
 
   public TodoItemsDataSource(Context context) {
@@ -51,6 +51,7 @@ public class TodoItemsDataSource {
     values.put(SqlHelper.COLUMN_TITLE, item.title);
     values.put(SqlHelper.COLUMN_DESCRIPTION, item.description);
     values.put(SqlHelper.COLUMN_DONE, item.done);
+    values.put(SqlHelper.COLUMN_DUEDATE, item.dueDate);
     int rowsAffected = dbHandler.update(
       SqlHelper.DATABASE_TABLE,
       values,
@@ -73,13 +74,31 @@ public class TodoItemsDataSource {
   }
 
   /**
+   * Finds a todo item from the database with the id specified
+   * @param todoId id of the item to fetch from the database
+   * @return TodoItem fetched from the database or null if not found
+   */
+  public TodoItem getTodoItem(long todoId) {
+    Cursor cursor = dbHandler.selectOne(SqlHelper.DATABASE_TABLE, allColumns, todoId);
+
+    if (cursor != null) {
+      cursor.moveToFirst();
+      TodoItem todoItem = cursorToTodoItem(cursor);
+      cursor.close();
+      return todoItem;
+    }
+    return null;
+  }
+
+  /**
    * Gets all the items from the database
    * @return List of TodoItems
    */
   public List<TodoItem> getAllTodoItems() {
     List<TodoItem> items = new ArrayList<TodoItem>();
 
-      Cursor cursor = dbHandler.select(SqlHelper.DATABASE_TABLE, allColumns);
+    Cursor cursor = dbHandler.selectAll(SqlHelper.DATABASE_TABLE, allColumns);
+    if (cursor != null) {
       cursor.moveToFirst();
       while (!cursor.isAfterLast()) {
         TodoItem todoItem = cursorToTodoItem(cursor);
@@ -87,6 +106,7 @@ public class TodoItemsDataSource {
         cursor.moveToNext();
       }
       cursor.close();
+    }
     return items;
   }
 
@@ -101,6 +121,7 @@ public class TodoItemsDataSource {
     todoItem.title = cursor.getString(1);
     todoItem.description = cursor.getString(2);
     todoItem.done = cursor.getInt(3) > 0;
+    todoItem.dueDate = cursor.getString(4);
     return todoItem;
   }
 }

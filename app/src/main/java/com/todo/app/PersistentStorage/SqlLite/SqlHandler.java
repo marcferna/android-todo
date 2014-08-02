@@ -15,7 +15,7 @@ public class SqlHandler {
   /**
    * Version of the database
    */
-  public static final int DATABASE_VERSION = 1;
+  public static final int DATABASE_VERSION = 2;
 
   /**
    * Instance of the SQLIte database
@@ -46,7 +46,7 @@ public class SqlHandler {
    * {@link Cursor}s are not synchronized, see the documentation for more details.
    * @see Cursor
    */
-  public Cursor select(String table, String[] columns) {
+  public Cursor selectAll(String table, String[] columns) {
     try {
       if (sqlDatabase.isOpen()) {
         sqlDatabase.close();
@@ -55,6 +55,36 @@ public class SqlHandler {
       sqlDatabase = dbHelper.getWritableDatabase();
       return sqlDatabase.query(table, columns, null, null,
         null, null, null);
+
+    } catch (Exception e) {
+
+      System.out.println("DATABASE ERROR " + e);
+    }
+    return null;
+  }
+
+  /**
+   * Query the given table for an specific id, returning a {@link Cursor} over the result set.
+   *
+   * @param table The table name to compile the query against.
+   * @param columns A list of which columns to return. Passing null will
+   *            return all columns, which is discouraged to prevent reading
+   *            data from storage that isn't going to be used.
+   * @param todoId The id of the item to fetch from the database
+
+   * @return A {@link Cursor} object, which is positioned before the first entry. Note that
+   * {@link Cursor}s are not synchronized, see the documentation for more details.
+   * @see Cursor
+   */
+  public Cursor selectOne(String table, String[] columns, long todoId) {
+    try {
+      if (sqlDatabase.isOpen()) {
+        sqlDatabase.close();
+      }
+
+      sqlDatabase = dbHelper.getWritableDatabase();
+      return sqlDatabase.query(table, columns, "id = " + todoId, null,
+                                  null, null, null);
 
     } catch (Exception e) {
 

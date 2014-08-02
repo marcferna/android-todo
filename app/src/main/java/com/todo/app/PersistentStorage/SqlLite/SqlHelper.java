@@ -21,16 +21,18 @@ public class SqlHelper extends SQLiteOpenHelper {
   public static final String COLUMN_TITLE = "title";
   public static final String COLUMN_DESCRIPTION = "description";
   public static final String COLUMN_DONE = "done";
+  public static final String COLUMN_DUEDATE = "duedate";
 
   /**
    * SQL script to create the database
    */
   private static final String SCRIPT_CREATE_DATABASE = "create table "
-    + DATABASE_TABLE + " (" + COLUMN_ID
-    + " integer primary key autoincrement, " + COLUMN_TITLE
-    + " text, " + COLUMN_DESCRIPTION
-    + " text, " + COLUMN_DONE
-    + " boolean)";
+    + DATABASE_TABLE + " (" + COLUMN_ID + " integer primary key autoincrement, "
+    + COLUMN_TITLE + " text, "
+    + COLUMN_DESCRIPTION + " text, "
+    + COLUMN_DONE + " boolean, "
+    + COLUMN_DUEDATE + " text"
+    + ")";
 
 
   public SqlHelper(Context context, String database,
