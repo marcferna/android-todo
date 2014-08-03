@@ -22,7 +22,7 @@ public class TodoItemsDataSource {
    */
   private String[] allColumns = { SqlHelper.COLUMN_ID,
     SqlHelper.COLUMN_TITLE, SqlHelper.COLUMN_DESCRIPTION,
-    SqlHelper.COLUMN_DONE, SqlHelper.COLUMN_DUEDATE};
+    SqlHelper.COLUMN_DONE, SqlHelper.COLUMN_DUEDATE, SqlHelper.COLUMN_PRIORITY};
 
 
   public TodoItemsDataSource(Context context) {
@@ -52,6 +52,7 @@ public class TodoItemsDataSource {
     values.put(SqlHelper.COLUMN_DESCRIPTION, item.description);
     values.put(SqlHelper.COLUMN_DONE, item.done);
     values.put(SqlHelper.COLUMN_DUEDATE, item.dueDate);
+    values.put(SqlHelper.COLUMN_PRIORITY, item.priority);
     int rowsAffected = dbHandler.update(
       SqlHelper.DATABASE_TABLE,
       values,
@@ -122,6 +123,7 @@ public class TodoItemsDataSource {
     todoItem.description = cursor.getString(2);
     todoItem.done = cursor.getInt(3) > 0;
     todoItem.dueDate = cursor.getString(4);
+    todoItem.priority = cursor.getInt(5);
     return todoItem;
   }
 }

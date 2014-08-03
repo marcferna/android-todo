@@ -15,7 +15,7 @@ public class SqlHandler {
   /**
    * Version of the database
    */
-  public static final int DATABASE_VERSION = 2;
+  public static final int DATABASE_VERSION = 3;
 
   /**
    * Instance of the SQLIte database
@@ -54,7 +54,7 @@ public class SqlHandler {
 
       sqlDatabase = dbHelper.getWritableDatabase();
       return sqlDatabase.query(table, columns, null, null,
-        null, null, null);
+        SqlHelper.COLUMN_PRIORITY, null, null);
 
     } catch (Exception e) {
 
@@ -83,7 +83,7 @@ public class SqlHandler {
       }
 
       sqlDatabase = dbHelper.getWritableDatabase();
-      return sqlDatabase.query(table, columns, "id = " + todoId, null,
+      return sqlDatabase.query(table, columns, SqlHelper.COLUMN_ID + " = " + todoId, null,
                                   null, null, null);
 
     } catch (Exception e) {

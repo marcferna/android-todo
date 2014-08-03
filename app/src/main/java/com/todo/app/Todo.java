@@ -132,11 +132,13 @@ public class Todo extends Activity {
       String newTitle = data.getExtras().getString("title");
       String newDescription = data.getExtras().getString("description");
       String newDueDate = data.getExtras().getString("dueDate");
+      int newPriority = data.getExtras().getInt("priority");
 
       TodoItem modifiedItem = items.get(position);
       modifiedItem.title = newTitle;
       modifiedItem.description = newDescription;
       modifiedItem.dueDate = newDueDate;
+      modifiedItem.priority = newPriority;
 
       if (persistentStorage.updateItem(modifiedItem)) {
         // update the item's info

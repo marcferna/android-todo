@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import com.todo.app.PersistentStorage.PersistentStorage;
 import com.todo.app.TodoItem.TodoItem;
@@ -36,7 +37,12 @@ public class EditItem extends Activity implements DatePickerDialog.OnDateSetList
   /**
    * Text field with the item's due date
    */
-  private EditText dueDateText;
+  private EditText dueDateEditText;
+
+  /**
+   * NumberPicker field with the item's priority
+   */
+  private NumberPicker priorityNumberPicker;
 
   /**
    * Calendar used to extract the year, month and day from the dates
@@ -80,15 +86,20 @@ public class EditItem extends Activity implements DatePickerDialog.OnDateSetList
     descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
     descriptionEditText.setText(todoItem.description);
 
-    dueDateText = (EditText) findViewById(R.id.dueDateText);
-    dueDateText.setText(todoItem.dueDate);
+    dueDateEditText = (EditText) findViewById(R.id.dueDateEditText);
+    dueDateEditText.setText(todoItem.dueDate);
+
+    priorityNumberPicker = (NumberPicker) findViewById(R.id.numberpicker);
+    priorityNumberPicker.setMaxValue(100);
+    priorityNumberPicker.setMinValue(0);
+    priorityNumberPicker.setValue(todoItem.priority);
 
     // set an onFocus listener to the due date field to display a DatePicker
-    dueDateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+    dueDateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
       public void onFocusChange(View v, boolean hasFocus) {
         if(hasFocus) {
           int year, month, day;
-          String dueDateString = dueDateText.getText().toString();
+          String dueDateString = dueDateEditText.getText().toString();
           if (dueDateString.length() > 0) {
             try {
               Date date = dateFormatter.parse(dueDateString);
@@ -110,8 +121,8 @@ public class EditItem extends Activity implements DatePickerDialog.OnDateSetList
     calendar.set(Calendar.YEAR, year);
     calendar.set(Calendar.MONTH, month);
     calendar.set(Calendar.DAY_OF_MONTH, day);
-    dueDateText.setText(dateFormatter.format(calendar.getTime()));
-    dueDateText.clearFocus();
+    dueDateEditText.setText(dateFormatter.format(calendar.getTime()));
+    dueDateEditText.clearFocus();
   }
 
   public void saveEditTodoItem(View v) {
@@ -122,7 +133,8 @@ public class EditItem extends Activity implements DatePickerDialog.OnDateSetList
     Intent data = new Intent();
     data.putExtra("title", titleEditText.getText().toString());
     data.putExtra("description", descriptionEditText.getText().toString());
-    data.putExtra("dueDate", dueDateText.getText().toString());
+    data.putExtra("dueDate", dueDateEditText.getText().toString());
+    data.putExtra("priority", priorityNumberPicker.getValue());
     data.putExtra("position", position);
     setResult(RESULT_OK, data);
     finish();

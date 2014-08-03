@@ -8,6 +8,7 @@ public class TodoItem {
   public String description;
   public boolean done = false;
   public String dueDate;
+  public int priority;
 
   public TodoItem() {
     super();

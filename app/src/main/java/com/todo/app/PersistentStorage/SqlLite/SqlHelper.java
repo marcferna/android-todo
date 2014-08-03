@@ -22,6 +22,7 @@ public class SqlHelper extends SQLiteOpenHelper {
   public static final String COLUMN_DESCRIPTION = "description";
   public static final String COLUMN_DONE = "done";
   public static final String COLUMN_DUEDATE = "duedate";
+  public static final String COLUMN_PRIORITY = "priority";
 
   /**
    * SQL script to create the database
@@ -31,7 +32,8 @@ public class SqlHelper extends SQLiteOpenHelper {
     + COLUMN_TITLE + " text, "
     + COLUMN_DESCRIPTION + " text, "
     + COLUMN_DONE + " boolean, "
-    + COLUMN_DUEDATE + " text"
+    + COLUMN_DUEDATE + " text, "
+    + COLUMN_PRIORITY + " integer"
     + ")";
 
 
