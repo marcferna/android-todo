@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.todo.app.R;
 import com.todo.app.Todo;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
@@ -80,6 +82,19 @@ public class TodoItemAdapter extends ArrayAdapter<TodoItem> {
   @Override
   public long getItemId(int position) {
     return position;
+  }
+
+  @Override
+  public void notifyDataSetChanged() {
+    Collections.sort(data, new Comparator<TodoItem>() {
+      @Override
+      public int compare(TodoItem todo1, TodoItem todo2) {
+        return ((Integer) (todo1.priority)).compareTo(todo2.priority);
+      }
+
+    });
+
+    super.notifyDataSetChanged();
   }
 
   /**

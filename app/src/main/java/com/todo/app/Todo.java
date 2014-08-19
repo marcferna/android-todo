@@ -109,6 +109,7 @@ public class Todo extends Activity {
     if (insertedId != -1) {
       newItem.id = insertedId;
       itemsAdapter.add(newItem);
+//      itemsAdapter.notifyDataSetChanged();
       etNewItem.setText("");
     }
   }
